@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">VkNewsClient</string>
     <string name="template_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
-    <string name="navigation_item_main">Главная</string>
-    <string name="navigation_item_favourite">Избранное</string>
-    <string name="navigation_item_profile">Профиль</string>
+    <string name="navigation_item_main">Home</string>
+    <string name="navigation_item_favorite">Favorite</string>
+    <string name="navigation_item_profile">Profile</string>
+    <integer name="com_vk_sdk_AppId">52587221</integer>
 </resources>

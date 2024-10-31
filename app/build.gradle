@@ -1,15 +1,16 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
 }
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.sumin.vknewsclient"
         minSdk 24
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -17,6 +18,12 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+        manifestPlaceholders = [
+                "VKIDClientId"      : "52587221", // ID вашего приложения (app_id).
+                "VKIDClientSecret"  : "fOqeuDjVoestpRUtvqhq", // Ваш защищенный ключ (client_secret).
+                "VKIDRedirectHost"  : "vk.com", // Обычно используется vk.com.
+                "VKIDRedirectScheme": "vk52587221" // Обычно используется vkID приложения.
+        ]
     }
 
     buildTypes {
@@ -54,6 +61,14 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
     implementation 'androidx.activity:activity-compose:1.3.1'
     implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+    implementation "androidx.navigation:navigation-compose:2.5.2"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
+    implementation 'com.google.code.gson:gson:2.10'
+    implementation "io.coil-kt:coil-compose:2.1.0"
+
+    implementation 'com.vk:android-sdk-core:4.0.1'
+    implementation 'com.vk:android-sdk-api:4.0.1'
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

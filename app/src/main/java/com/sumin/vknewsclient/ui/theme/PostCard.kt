@@ -8,17 +8,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.SwipeableState
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.MoreVert
-import androidx.compose.material.swipeable
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,17 +41,19 @@ fun PostCard(
 ) {
     Card(
         modifier = modifier
-
     ) {
         Column(
             modifier = modifier
+                .padding(8.dp)
         ) {
             PostHeader(feedPost)
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = feedPost.postText)
             Spacer(modifier = Modifier.height(8.dp))
             Image(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp),
                 painter = painterResource(id = feedPost.postImage),
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth

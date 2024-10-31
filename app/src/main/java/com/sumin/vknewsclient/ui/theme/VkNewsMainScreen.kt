@@ -1,44 +1,57 @@
 package com.sumin.vknewsclient.ui.theme
 
 import android.annotation.SuppressLint
-import android.util.Log
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.foundation.clickable
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import com.sumin.vknewsclient.MainViewModel
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.sumin.vknewsclient.domain.FeedPost
+import com.sumin.vknewsclient.navigation.AppNavGraph
+import com.sumin.vknewsclient.navigation.Screen
+import com.sumin.vknewsclient.navigation.rememberNavigationState
+import com.sumin.vknewsclient.ui.theme.NavigationItem.Favorite
+import com.sumin.vknewsclient.ui.theme.NavigationItem.Home
+import com.sumin.vknewsclient.ui.theme.NavigationItem.Profile
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainScreen(viewModel: MainViewModel) {
-
-    val feedPost = viewModel.feedPost.observeAsState(FeedPost())
+fun MainScreen() {
+    val navigationState = rememberNavigationState()
 
     Scaffold(
-
         bottomBar = {
             BottomNavigation {
-                Log.d("COMPOSE_TEST", "BottomNavigation")
-
-                val selectedItemPosition = remember {
-                    mutableStateOf(0)
-                }
-
+                val navBackStackEntry by navigationState
+                    .navHostController
+                    .currentBackStackEntryAsState()
                 val items = listOf(
-                    NavigationItem.Home,
-                    NavigationItem.Favourite,
-                    NavigationItem.Profile
+                    Home,
+                    Favorite,
+                    Profile
                 )
-                items.forEachIndexed { index, item ->
+                items.forEach { item ->
+                    val selected = navBackStackEntry?.destination?.hierarchy?.any {
+                        it.route == item.screen.route
+                    } ?: false
                     BottomNavigationItem(
-                        selected = selectedItemPosition.value == index,
-                        onClick = { selectedItemPosition.value = index },
+                        selected = selected,
+                        onClick = {
+                            if (!selected) navigationState.navigateTo(item.screen.route)
+                        },
                         icon = {
                             Icon(item.icon, contentDescription = null)
                         },
@@ -52,13 +65,36 @@ fun MainScreen(viewModel: MainViewModel) {
             }
         }
     ) {
-        PostCard(
-            modifier = Modifier.padding(8.dp),
-            feedPost = feedPost.value,
-            onViewsClickListener = viewModel::updateCount,
-            onShareClickListener = viewModel::updateCount,
-            onCommentClickListener = viewModel::updateCount,
-            onLikeClickListener = viewModel::updateCount
+        AppNavGraph(
+            navHostController = navigationState.navHostController,
+            newsFeedScreenContent = {
+                HomeScreen(
+                    paddingValues = it,
+                    onCommentClickListener = {
+                        navigationState.navigateToComments(it)
+                    }
+                )
+            },
+            commentsScreenContent = { feedPost ->
+                CommentsScreen(
+                    feedPost = feedPost
+                ) {
+                    navigationState.navHostController.popBackStack()
+                }
+            },
+            favoriteScreenContent = { TextCounter("Favorite") },
+            profileScreenContent = { TextCounter("Profile") }
         )
     }
+}
+
+@Composable
+private fun TextCounter(name: String) {
+    var count by rememberSaveable {
+        mutableStateOf(0)
+    }
+    Text(
+        modifier = Modifier.clickable { count++ },
+        text = "$name, count: $count"
+    )
 }
