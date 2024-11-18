@@ -18,12 +18,6 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
-        manifestPlaceholders = [
-                "VKIDClientId"      : "52587221", // ID вашего приложения (app_id).
-                "VKIDClientSecret"  : "fOqeuDjVoestpRUtvqhq", // Ваш защищенный ключ (client_secret).
-                "VKIDRedirectHost"  : "vk.com", // Обычно используется vk.com.
-                "VKIDRedirectScheme": "vk52587221" // Обычно используется vkID приложения.
-        ]
     }
 
     buildTypes {
