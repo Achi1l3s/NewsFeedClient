@@ -1,4 +1,4 @@
-package com.faist.vknewsclient.domain
+package com.faist.vknewsclient.domain.entity
 
 import android.os.Bundle
 import android.os.Parcelable

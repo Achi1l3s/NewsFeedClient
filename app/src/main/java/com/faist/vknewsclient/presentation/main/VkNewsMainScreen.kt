@@ -21,6 +21,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.faist.vknewsclient.navigation.AppNavGraph
 import com.faist.vknewsclient.navigation.rememberNavigationState
+import com.faist.vknewsclient.presentation.ViewModelFactory
 import com.faist.vknewsclient.presentation.comments.CommentsScreen
 import com.faist.vknewsclient.presentation.main.NavigationItem.Favorite
 import com.faist.vknewsclient.presentation.main.NavigationItem.Home
@@ -30,7 +31,7 @@ import com.faist.vknewsclient.presentation.news.NewsFeedScreen
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainScreen() {
+fun MainScreen(viewModelFactory: ViewModelFactory) {
     val navigationState = rememberNavigationState()
 
     Scaffold(
@@ -70,6 +71,7 @@ fun MainScreen() {
             navHostController = navigationState.navHostController,
             newsFeedScreenContent = {
                 NewsFeedScreen(
+                    viewModelFactory = viewModelFactory,
                     paddingValues = it,
                     onCommentClickListener = {
                         navigationState.navigateToComments(it)
@@ -78,6 +80,7 @@ fun MainScreen() {
             },
             commentsScreenContent = { feedPost ->
                 CommentsScreen(
+                    viewModelFactory = viewModelFactory,
                     feedPost = feedPost
                 ) {
                     navigationState.navHostController.popBackStack()

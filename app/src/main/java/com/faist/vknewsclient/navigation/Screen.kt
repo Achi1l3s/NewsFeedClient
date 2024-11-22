@@ -1,7 +1,7 @@
 package com.faist.vknewsclient.navigation
 
 import android.net.Uri
-import com.faist.vknewsclient.domain.FeedPost
+import com.faist.vknewsclient.domain.entity.FeedPost
 import com.google.gson.Gson
 
 sealed class Screen(

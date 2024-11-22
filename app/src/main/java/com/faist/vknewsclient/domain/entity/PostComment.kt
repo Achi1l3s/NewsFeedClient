@@ -1,4 +1,4 @@
-package com.faist.vknewsclient.domain
+package com.faist.vknewsclient.domain.entity
 
 import com.faist.vknewsclient.data.model.AttachmentDto
 

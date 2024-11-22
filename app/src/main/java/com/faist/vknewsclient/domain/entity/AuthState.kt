@@ -1,4 +1,4 @@
-package com.faist.vknewsclient.presentation.main
+package com.faist.vknewsclient.domain.entity
 
 sealed class AuthState {
 

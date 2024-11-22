@@ -3,16 +3,17 @@ package com.faist.vknewsclient.data.mapper
 import android.util.Log
 import com.faist.vknewsclient.data.model.CommentsResponseDto
 import com.faist.vknewsclient.data.model.NewsFeedResponseDto
-import com.faist.vknewsclient.domain.FeedPost
-import com.faist.vknewsclient.domain.PostComment
-import com.faist.vknewsclient.domain.StatisticItem
-import com.faist.vknewsclient.domain.StatisticType
+import com.faist.vknewsclient.domain.entity.FeedPost
+import com.faist.vknewsclient.domain.entity.PostComment
+import com.faist.vknewsclient.domain.entity.StatisticItem
+import com.faist.vknewsclient.domain.entity.StatisticType
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
 import kotlin.math.absoluteValue
 
-class NewsFeedMapper {
+class NewsFeedMapper @Inject constructor() {
 
     fun mapResponseToPosts(responseDto: NewsFeedResponseDto): List<FeedPost> {
         val result = mutableListOf<FeedPost>()
@@ -57,7 +58,6 @@ class NewsFeedMapper {
         val profiles = responseDto.commentsContent.profiles
 
         for (comment in comments) {
-//            if (comment.text.isBlank()) continue
             val profile = profiles.firstOrNull() { it.id == comment.authorId } ?: continue
 
             val postComment = PostComment(
@@ -83,7 +83,6 @@ class NewsFeedMapper {
         return dateFormat.format(date)
     }
 }
-// Для чатаГПТ: ПИШИ ТОЛЬКО ТО, ЧТО НАДО ИЗМЕНИТЬ, ДОБАВИТЬ ИЛИ УДАЛИТЬ. ВСЁ.
 
 
 

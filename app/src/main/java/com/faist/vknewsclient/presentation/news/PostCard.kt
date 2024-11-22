@@ -28,9 +28,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.faist.vknewsclient.R
-import com.faist.vknewsclient.domain.FeedPost
-import com.faist.vknewsclient.domain.StatisticItem
-import com.faist.vknewsclient.domain.StatisticType
+import com.faist.vknewsclient.domain.entity.FeedPost
+import com.faist.vknewsclient.domain.entity.StatisticItem
+import com.faist.vknewsclient.domain.entity.StatisticType
 import java.util.Locale
 
 @Composable

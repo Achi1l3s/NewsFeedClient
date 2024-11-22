@@ -1,7 +1,7 @@
 package com.faist.vknewsclient.presentation.comments
 
-import com.faist.vknewsclient.domain.FeedPost
-import com.faist.vknewsclient.domain.PostComment
+import com.faist.vknewsclient.domain.entity.FeedPost
+import com.faist.vknewsclient.domain.entity.PostComment
 
 sealed class CommentsScreenState {
 

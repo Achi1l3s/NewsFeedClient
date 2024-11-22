@@ -1,33 +1,22 @@
 package com.faist.vknewsclient.presentation.main
 
-import android.app.Application
-import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.faist.vknewsclient.presentation.main.AuthState.Initial
-import com.vk.api.sdk.VKPreferencesKeyValueStorage
-import com.vk.api.sdk.auth.VKAccessToken
-import com.vk.api.sdk.auth.VKAuthenticationResult
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.faist.vknewsclient.domain.usecases.CheckAuthStateUseCase
+import com.faist.vknewsclient.domain.usecases.GetAuthStateFlowUseCase
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+class MainViewModel @Inject constructor(
+    private val getAuthStateFlowUseCase: GetAuthStateFlowUseCase,
+    private val checkAuthStateUseCase: CheckAuthStateUseCase
+) : ViewModel() {
 
-    private val _authState = MutableLiveData<AuthState>(Initial)
-    val authState: LiveData<AuthState> = _authState
+    val authState = getAuthStateFlowUseCase()
 
-    init {
-        val storage = VKPreferencesKeyValueStorage(application)
-        val token = VKAccessToken.restore(storage)
-        val loggedIn = token != null && token.isValid
-        Log.d("MYToken", "Access token: ${token?.accessToken}")
-        _authState.value = if (loggedIn) AuthState.Authorized else AuthState.NotAuthorized
-    }
-
-    fun performAuthResult(result: VKAuthenticationResult) {
-        if (result is VKAuthenticationResult.Success) {
-            _authState.value = AuthState.Authorized
-        } else {
-            _authState.value = AuthState.NotAuthorized
+    fun performAuthResult() {
+        viewModelScope.launch {
+            checkAuthStateUseCase()
         }
     }
 }

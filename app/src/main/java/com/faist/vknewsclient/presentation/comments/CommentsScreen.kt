@@ -35,9 +35,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -70,8 +69,9 @@ import com.faist.vknewsclient.data.model.MediaType.IMAGE
 import com.faist.vknewsclient.data.model.MediaType.TEXT
 import com.faist.vknewsclient.data.model.MediaType.UNKNOWN
 import com.faist.vknewsclient.data.model.MediaType.VIDEO
-import com.faist.vknewsclient.domain.FeedPost
-import com.faist.vknewsclient.domain.PostComment
+import com.faist.vknewsclient.domain.entity.FeedPost
+import com.faist.vknewsclient.domain.entity.PostComment
+import com.faist.vknewsclient.presentation.ViewModelFactory
 import com.faist.vknewsclient.presentation.comments.CommentsScreenState.Comments
 import com.faist.vknewsclient.presentation.comments.CommentsScreenState.Initial
 import com.google.android.exoplayer2.ExoPlayer
@@ -80,17 +80,13 @@ import com.google.android.exoplayer2.ui.PlayerView
 
 @Composable
 fun CommentsScreen(
+    viewModelFactory: ViewModelFactory,
     feedPost: FeedPost,
     onBackPressed: () -> Unit
 ) {
-    val viewModel: CommentsViewModel = viewModel(
-        factory = CommentsViewModelFactory(
-            feedPost,
-            application = LocalContext.current.applicationContext as Application
-        )
-    )
-    val screenState = viewModel.screenState.observeAsState(Initial)
+    val viewModel: CommentsViewModel = viewModel(factory = viewModelFactory)
 
+    val screenState = viewModel.screenState.collectAsState(Initial)
 
     when (val currentState = screenState.value) {
         is Comments -> {
@@ -153,14 +149,6 @@ fun CommentsScreen(
                                 contentAlignment = Alignment.Center
                             ) {
                                 CircularProgressIndicator(color = Color.Blue)
-                            }
-                        } else {
-                            LaunchedEffect(Unit) {
-                                Log.d(
-                                    "MediaCheck",
-                                    "LaunchedEffect, CommentsScreen loadNextComments BLOCK"
-                                )
-                                viewModel.loadNextComments()
                             }
                         }
                     }
