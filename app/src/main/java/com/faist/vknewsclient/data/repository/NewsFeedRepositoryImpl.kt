@@ -96,36 +96,34 @@ class NewsFeedRepositoryImpl @Inject constructor(
     override fun getComments(feedPost: FeedPost): StateFlow<List<PostComment>> = flow {
         val startFrom = nextCommentsFrom
         Log.d("MediaCheck", "NewsFeedRepository, 'loadPostComments' BLOCK, startFrom: $startFrom")
-        while (nextCommentsFrom != null || postComments.isEmpty()) {
-            val response = if (startFrom == null) {
-                apiService.loadComments(
-                    token = getAccessToken(),
-                    ownerId = feedPost.communityId,
-                    postId = feedPost.id,
-                    count = 20
-                )
-            } else {
-                apiService.loadComments(
-                    token = getAccessToken(),
-                    ownerId = feedPost.communityId,
-                    postId = feedPost.id,
-                    startCommentsFrom = startFrom,
-                    count = 20 + startFrom
-                )
-            }
-            nextCommentsFrom = response.commentsContent.startCommentsFrom
-
-            _postComments.addAll(mapper.mapResponseToComments(response))
-            Log.d(
-                "MediaCheck",
-                "Repository, post_id: ${feedPost.id} and ownerId: ${feedPost.communityId}"
+        val response = if (startFrom == null) {
+            apiService.loadComments(
+                token = getAccessToken(),
+                ownerId = feedPost.communityId,
+                postId = feedPost.id,
+                count = 20
             )
-            Log.d(
-                "MediaCheck",
-                "Repository, 'loadPostComments' BLOCK, response: ${response.commentsContent.comments.first()}"
+        } else {
+            apiService.loadComments(
+                token = getAccessToken(),
+                ownerId = feedPost.communityId,
+                postId = feedPost.id,
+                startCommentsFrom = startFrom,
+                count = 20 + startFrom
             )
-            emit(mapper.mapResponseToComments(response))
         }
+        nextCommentsFrom = response.commentsContent.startCommentsFrom
+
+        _postComments.addAll(mapper.mapResponseToComments(response))
+        Log.d(
+            "MediaCheck",
+            "Repository, post_id: ${feedPost.id} and ownerId: ${feedPost.communityId}"
+        )
+        Log.d(
+            "MediaCheck",
+            "Repository, 'loadPostComments' BLOCK, response: ${response.commentsContent.comments.first()}"
+        )
+        emit(mapper.mapResponseToComments(response))
     }.retry {
         delay(RETRY_TIMEOUT_MILLIS)
         true

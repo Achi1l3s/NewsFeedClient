@@ -31,7 +31,7 @@ import com.faist.vknewsclient.presentation.news.NewsFeedScreen
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainScreen(viewModelFactory: ViewModelFactory) {
+fun MainScreen() {
     val navigationState = rememberNavigationState()
 
     Scaffold(
@@ -71,7 +71,6 @@ fun MainScreen(viewModelFactory: ViewModelFactory) {
             navHostController = navigationState.navHostController,
             newsFeedScreenContent = {
                 NewsFeedScreen(
-                    viewModelFactory = viewModelFactory,
                     paddingValues = it,
                     onCommentClickListener = {
                         navigationState.navigateToComments(it)
@@ -80,7 +79,6 @@ fun MainScreen(viewModelFactory: ViewModelFactory) {
             },
             commentsScreenContent = { feedPost ->
                 CommentsScreen(
-                    viewModelFactory = viewModelFactory,
                     feedPost = feedPost
                 ) {
                     navigationState.navHostController.popBackStack()
