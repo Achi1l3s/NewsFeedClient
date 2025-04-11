@@ -29,12 +29,8 @@ class NewsFeedRepositoryImpl @Inject constructor(
     private val feedPosts: List<FeedPost>
         get() = _feedPosts.toList()
 
-    private var _postComments = mutableListOf<PostComment>()
-    private val postComments: List<PostComment>
-        get() = _postComments
-
     private var nextFrom: String? = null
-    private var nextCommentsFrom: Int? = null
+//    private var nextCommentsFrom: Int? = null
 
     private val checkAuthStateEvents = MutableSharedFlow<Unit>(replay = 1)
 
@@ -94,39 +90,16 @@ class NewsFeedRepositoryImpl @Inject constructor(
     }
 
     override fun getComments(feedPost: FeedPost): StateFlow<List<PostComment>> = flow {
-        val startFrom = nextCommentsFrom
-        Log.d("MediaCheck", "NewsFeedRepository, 'loadPostComments' BLOCK, startFrom: $startFrom")
-        val response = if (startFrom == null) {
-            apiService.loadComments(
+        val response = apiService.loadComments(
                 token = getAccessToken(),
                 ownerId = feedPost.communityId,
-                postId = feedPost.id,
-                count = 20
+                postId = feedPost.id
             )
-        } else {
-            apiService.loadComments(
-                token = getAccessToken(),
-                ownerId = feedPost.communityId,
-                postId = feedPost.id,
-                startCommentsFrom = startFrom,
-                count = 20 + startFrom
-            )
-        }
-        nextCommentsFrom = response.commentsContent.startCommentsFrom
-
-        _postComments.addAll(mapper.mapResponseToComments(response))
-        Log.d(
-            "MediaCheck",
-            "Repository, post_id: ${feedPost.id} and ownerId: ${feedPost.communityId}"
-        )
-        Log.d(
-            "MediaCheck",
-            "Repository, 'loadPostComments' BLOCK, response: ${response.commentsContent.comments.first()}"
-        )
         emit(mapper.mapResponseToComments(response))
     }.retry {
         delay(RETRY_TIMEOUT_MILLIS)
         true
+
     }.stateIn(
         scope = coroutineScope,
         started = SharingStarted.Lazily,

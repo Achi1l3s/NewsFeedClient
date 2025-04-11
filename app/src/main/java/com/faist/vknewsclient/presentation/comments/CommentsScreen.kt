@@ -25,6 +25,7 @@ import com.faist.vknewsclient.data.model.MediaType.TEXT
 import com.faist.vknewsclient.domain.entity.*
 import com.faist.vknewsclient.presentation.comments.CommentsScreenState.*
 import com.faist.vknewsclient.presentation.getApplicationComponent
+import java.util.UUID
 
 @Composable
 fun CommentsScreen(
@@ -91,9 +92,10 @@ fun CommentsScreenContent(
                     ),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
+                    var i = 0
                     items(
                         items = currentState.comments,
-                        key = { it.id - it.hashCode() }
+                        key = { it.id }
                     ) { comment ->
                         Log.d(
                             "MediaCheck",

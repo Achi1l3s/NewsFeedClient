@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.faist.vknewsclient.domain.usecases.CheckAuthStateUseCase
 import com.faist.vknewsclient.domain.usecases.GetAuthStateFlowUseCase
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(

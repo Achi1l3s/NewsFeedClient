@@ -19,12 +19,11 @@ interface ApiService {
         @Query("start_from") startFrom: String
     ): NewsFeedResponseDto
 
-    @GET("wall.getComments?v=5.199&extended=1&fields=photo_100&sort=desc")
+    @GET("wall.getComments?v=5.199&extended=1&fields=photo_100")
     suspend fun loadComments(
         @Query("access_token") token: String,
         @Query("owner_id") ownerId: Long,
-        @Query("post_id") postId: Long,
-        @Query("count") count: Int
+        @Query("post_id") postId: Long
     ): CommentsResponseDto
 
     @GET("wall.getComments?v=5.199&extended=1&fields=photo_100&sort=desc")

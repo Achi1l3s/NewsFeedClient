@@ -8,6 +8,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.faist.vknewsclient.domain.entity.AuthState
 import com.faist.vknewsclient.presentation.NewsFeedApplication
@@ -16,6 +17,13 @@ import com.faist.vknewsclient.presentation.getApplicationComponent
 import com.faist.vknewsclient.ui.theme.VkNewsClientTheme
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class MainActivity : ComponentActivity() {
@@ -51,3 +59,26 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+
+
+
+
+fun main() = runBlocking {
+    val channel = Channel<Int>()
+
+    launch {
+        repeat(1000) {
+            channel.send(1)
+        }
+        channel.close() // Закрываем канал после отправки
+    }
+
+    var counter = 0
+    for (value in channel) {
+        counter += value
+    }
+
+    println("Counter: $counter") // Всегда 1000
+}
+
